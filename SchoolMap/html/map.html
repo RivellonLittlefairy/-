@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>exam</title>
+	<style type="text/css">
+		body{
+			background: url(../src/底版.PNG);
+			background-repeat: no-repeat;
+			background-size: 1400px 940px;
+		}
+		
+		.img {
+			border: 7px solid #ababab;
+			border-radius: 25px;
+		    width: 480px;
+		    height: 320px;
+		    margin: 0 auto;
+			margin:10px 5px 15px 20px;
+		    display: none;
+			position:relative;
+		    left:1390px;
+		    top:20px
+		}
+		#start{
+			border: 5px solid #b8b8b8;
+			border-radius: 10px;
+			width: 250px;
+			font-size: 20px;
+			color: #b8b8b8;
+			background: #ffffff90;
+			border-color: #b8b8b8;
+			padding: 13px 25px;
+			margin-top: 10px;
+			position:relative;
+			top:70px;
+			left:1520px;
+		}			
+		#end{
+			border: 5px solid #b8b8b8;
+			border-radius: 10px;
+			width: 250px;
+			font-size: 20px;
+			color: #b8b8b8;
+			background: #ffffff90;
+			border-color: #b8b8b8;
+			padding: 13px 25px;
+			margin-top: 35px;
+			position:relative;
+			top:160px;
+			left:1268px;
+		}
+		#button1{
+			margin-top: 50px;
+			width: 150px;
+			height: 50px;
+			background: #ff7d1390;
+			border-radius: 10px;
+			border: 0;
+			color: #FFFFFF;
+			font-size: 30px;
+			position:relative;
+			top:260px;
+			left:1065px;
+			
+		}
+		#button2{
+			margin-top: 50px;
+			width: 150px;
+			height: 50px;
+			background: #ff7d1390;
+			border-radius: 10px;
+			border: 0;
+			color: #FFFFFF;
+			font-size: 30px;
+			position:relative;
+			top:320px;
+			left:910px;
+			
+		}
+		#canvas_box{
+			position:relative;
+			top:-300px;
+		}
+	</style>
+</head>
+<body>
+		<a href="操场.html">
+	    <img class="img-slide img" src="../src/操场.jpg" alt="img1">
+		</a>
+	    <a href="东苑餐厅.html">
+	    <img class="img-slide img" src="../src/东苑餐厅.jpg" alt="img1">
+	    </a>
+		<a href="实验楼.html">
+		<img class="img-slide img" src="../src/实验楼.jpg" alt="img1">
+		</a>
+		<a href="图书馆.html">
+		<img class="img-slide img" src="../src/图书馆.jpg" alt="img1">
+		</a>
+		<a href="网球场.html">
+		<img class="img-slide img" src="../src/网球场.jpg" alt="img1">
+		</a>
+		<a href="西门.html">
+		<img class="img-slide img" src="../src/西门.jpg" alt="img1">
+		</a>
+		<a href="西苑餐厅.html">
+		<img class="img-slide img" src="../src/西苑餐厅.jpg" alt="img1">
+		</a>
+			<select id="start">
+			   <option value ="宿舍">宿舍</option>
+			   <option value ="东苑餐厅">东苑餐厅</option>
+			   <option value="西苑餐厅">西苑餐厅</option>
+			   <option value="体育场">体育场</option>
+			   <option value="网球场">网球场</option>
+			   <option value="逸夫楼">逸夫楼</option>
+			   <option value="南门">南门</option>
+			   <option value="实验楼">实验楼</option>
+			   <option value="南门外超市">南门外超市</option>
+			   <option value="西门外公交站">西门外公交站</option>
+			</select>
+			<select id="end">
+			  <option value ="宿舍">宿舍</option>
+			  <option value ="东苑餐厅">东苑餐厅</option>
+			  <option value="西苑餐厅">西苑餐厅</option>
+			  <option value="体育场">体育场</option>
+			  <option value="网球场">网球场</option>
+			  <option value="逸夫楼">逸夫楼</option>
+			  <option value="南门">南门</option>
+			  <option value="实验楼">实验楼</option>
+			  <option value="南门外超市">南门外超市</option>
+			  <option value="西门外公交站">西门外公交站</option>
+			</select>
+			<button onclick="hexin()" id="button1" type="button">
+				寻路
+			</button>
+			<button onclick="location.reload();" id="button2" type="button">
+				再来
+			</button>
+			
+	
+		<div id="canvas_box">
+			<canvas id="mycanvas" width="1350px" height="850px"></canvas>
+		</div>
+    <script>
+	var mc=document.getElementById("mycanvas");
+	var mc2d=mc.getContext("2d");
+	    var index = 0, len;
+	    var imgBox = document.getElementsByClassName("img-slide");
+	    len = imgBox.length;
+	    imgBox[index].style.display = 'block';
+	    function slideShow() {
+	        index ++;
+	        if(index >= len) index = 0;
+	        for(var i=0; i<len; i++) {
+	            imgBox[i].style.display = 'none';
+	        }
+	        imgBox[index].style.display = 'block';
+	    }
+	    setInterval(slideShow, 3000);
+	    var map1=new Map();
+	    map1.set("宿舍",1);
+	    map1.set("东苑餐厅",2);
+	    map1.set("西苑餐厅",3);
+	    map1.set("体育场",4);
+	    map1.set("网球场",5);
+	    map1.set("逸夫楼",6);
+	    map1.set("南门",7);
+	    map1.set("实验楼",8);
+	    map1.set("南门外超市",9);
+	    map1.set("西门外公交站",10);
+		var map2=new Map();
+		class point{
+			constructor(x,y){
+			        this.x=x;
+			        this.y=y;
+			    }
+		}
+		var map2=new Map();
+		map2.set(1,new point(1250,370));
+		map2.set(2,new point(1150,370));
+		map2.set(3,new point(600,450));
+		map2.set(4,new point(830,370));
+		map2.set(5,new point(720,370));
+		map2.set(6,new point(930,450));
+		map2.set(8,new point(355,450));
+		map2.set(7,new point(1105,623));
+		map2.set(9,new point(1105,700));
+		map2.set(10,new point(1200,628));
+		map2.set(11,new point(783,370));
+		map2.set(12,new point(1105,370));
+		map2.set(13,new point(655,450));
+		map2.set(14,new point(790,450));
+		map2.set(15,new point(1105,450));
+	</script>
+	<script type="text/javascript">
+	var floyd=[[200,100,730,660,690,400,400,980,480,500],
+	[100,100,630,560,590,300,300,880,380,400],
+	[730,630,100,310,340,330,670,250,750,770],
+	[660,560,310,80,110,260,600,560,680,700],
+	[690,590,340,110,140,290,630,590,710,730],
+	[400,300,330,260,290,280,340,580,420,440],
+	[400,300,670,600,630,340,160,920,80,100],
+	[980,880,250,560,590,580,920,500,1000,1020],
+	[480,380,750,680,710,420,80,1000,160,180],
+	[500,400,770,700,730,440,100,1020,180,200]
+	]
+		function drow(x1,y1,x2,y2){
+			mc2d.beginPath();
+			mc2d.strokeStyle="red";
+			mc2d.lineWidth=6;
+			mc2d.lineCap="round";
+			mc2d.moveTo(x1,y1);
+			mc2d.lineTo(x2,y2);
+			mc2d.stroke();
+		}
+		function helper(q,z){
+			if(q==1){
+				drow(1250,370,1150,370)
+				helper(2,z);
+			}
+			if(z==1){
+				drow(1250,370,1150,370)
+				helper(q,2);
+			}
+			if(q==2&&z==3||q==3&&z==2){
+				drow(1150,370,1108,370);
+				drow(1108,370,1108,450);
+				drow(1108,450,600,450);
+				return;
+			}
+			if(q==2&&z==6||q==6&&z==2){
+				drow(1150,370,1108,370);
+				drow(1108,370,1108,450);
+				drow(1108,450,930,450);
+				return;
+			}
+			if(q==2&&z==7||q==7&&z==2){
+				drow(1150,370,1108,370);
+				drow(1108,370,1108,623);
+				return;
+			}
+			if(q==2&&z==8||q==8&&z==2){
+				drow(1150,370,1108,370);
+				drow(1108,370,1108,450);
+				drow(1108,450,355,450);
+				return;
+			}
+			if(q==2&&z==8||q==8&&z==2){
+				drow(1150,370,1108,370);
+				drow(1108,370,1108,450);
+				drow(1108,450,355,450);
+				return;
+			}
+			if(q==2&&z==8||q==8&&z==2){
+				drow(1150,370,1108,370);
+				drow(1108,370,1108,450);
+				drow(1108,450,355,450);
+				return;
+			}
+			if(q==2&&z==8||q==8&&z==2){
+				drow(1150,370,1108,370);
+				drow(1108,370,1108,450);
+				drow(1108,450,355,450);
+				return;
+			}
+			if(q==3&&z==14||q==14&&z==3){
+				drow(600,450,790,450);
+			}
+			if(q==11&&z==14||q==14&&z==11){
+				drow(790,370,790,450);
+			}
+			if(q==11&&z==4||q==4&&z==11){
+				drow(790,370,830,370);
+			}
+			if(q==11&&z==5||q==5&&z==11){
+				drow(790,370,720,370);
+			}
+			
+			if(q==3&&z==4||q==4&&z==3){
+				helper(3,14);
+				helper(14,11);
+				helper(11,4);
+			}
+			if(q==3&&z==5||q==5&&z==3){
+				helper(3,14);
+				helper(14,11);
+				helper(11,5);
+			}	
+			if(q==3&&z==7||q==7&&z==3){
+				drow(600,450,1108,450);
+				helper(15,7);
+			}
+			if(q==15&&z==7||q==7&&z==15){
+				drow(1105,623,1108,450);
+			}
+			if(q==8){
+				drow(355,450,600,450);
+				helper(3,z);
+			}
+			if(z==8){
+				drow(355,450,600,450);
+				helper(q,3);
+			}
+			if(q==3&&z==9||q==9&&z==3){
+				helper(3,7);
+				drow(1105,700,1105,623);
+			}
+			if(q==3&&z==10||q==10&&z==3){
+				helper(3,7);
+				drow(1200,628,1105,623);
+			}
+			if(q==4&&z==6||q==6&&z==4){
+				helper(4,11);
+				helper(11,14);
+				drow(790,450,930,453);
+			}
+			if(q==4&&z==7||q==7&&z==4){
+				helper(15,7);
+				helper(4,11);
+				helper(11,14);
+				drow(790,450,1105,450)
+			}
+			if(q==4&&z==9||q==9&&z==4){
+				heler(7,4);
+				drow(1105,700,1105,623);
+			}
+			if(q==4&&z==10||q==10&&z==4){
+				heler(7,4);
+				drow(1200,628,1105,623);
+			}
+			if(q==5&&z==6||q==6&&z==5){
+				helper(5,11);
+				helper(11,14);
+				drow(790,450,930,453);
+			}
+			if(q==5&&z==7||q==7&&z==5){
+				helper(15,7);
+				helper(5,11);
+				helper(11,14);
+				drow(790,450,1105,450);
+			}
+			if(q==5&&z==9||q==9&&z==5){
+				helper(15,7);
+				helper(5,11);
+				helper(11,14);
+				drow(790,450,1105,450);
+				drow(1105,700,1105,623);
+			}
+			if(q==5&&z==10||q==10&&z==5){
+				helper(15,7);
+				helper(5,11);
+				helper(11,14);
+				drow(790,450,1105,450);
+				drow(1200,628,1105,623);
+			}
+			if(q==6&&z==7||q==7&&z==6){
+				drow(930,453,1105,450);
+				drow(1105,450,1105,623);
+			}
+			if(q==6&&z==9||q==9&&z==6){
+				drow(930,453,1105,450);
+				drow(1105,450,1105,623);
+				drow(1105,700,1105,623);
+			}
+			if(q==6&&z==10||q==10&&z==6){
+				drow(930,453,1105,450);
+				drow(1105,450,1105,623);
+				drow(1200,628,1105,623);
+			}
+			if(q==7&&z==8||q==8&&z==7){
+				drow(1105,450,1105,623);
+				drow(1105,450,355,450);
+			}
+			if(q==7&&z==10||q==10&&z==7){
+				drow(1200,628,1105,623);
+			}
+			if(q==8&&z==9||q==9&&z==8){
+				drow(1105,450,355,450);
+				drow(1105,450,1105,700);
+			}
+			if(q==8&&z==10||q==10&&z==8){
+				helper(8,7);
+				helper(7,10);
+			}
+			if(q==9&&z==10||q==10&&z==9){
+				drow(1105,700,1200,628);
+				helper(7,10);
+			}
+			
+			
+		}
+		function hexin(){
+			var obj=document.getElementById("start");
+			var obj2=document.getElementById("end");
+			var q=map1.get(obj.options[obj.selectedIndex].value);
+			var z=map1.get(obj2.options[obj2.selectedIndex].value);
+			var long=floyd[q-1][z-1];
+			
+			var buxing=(long/60).toFixed(2);
+			var qiche=(buxing/2.5).toFixed(2);
+			var juzi='步行需要'+buxing+'分钟,骑车需要'+qiche+'分钟';
+			window.alert(juzi);
+			var qx=map2.get(q).x;
+			var qy=map2.get(q).y;
+			var zx=map2.get(z).x;
+			var zy=map2.get(z).y;
+			if(qy==zy||qx==zx) {
+				drow(qx,qy,zx,zy);
+				return;
+			}
+			helper(q,z);
+			
+		}
+	</script>
+</body>
+</html>
